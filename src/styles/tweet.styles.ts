@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-rows: 30px 2fr;
   grid-template-columns: 3fr 100px;
-  padding: 20px 0;
+  padding: 20px 10px;
   border-bottom: 1px solid #dedede;
   gap: 5px;
 `;
@@ -22,13 +22,16 @@ export const Payload = styled.p`
 export const Textarea = styled(TextArea)`
   height: 100%;
 `;
-export const BtnWrapper = styled.div``;
+export const BtnWrapper = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 5px;
+`;
 export const EditButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   color: tomato;
   border: none;
-  float: right;
   margin-bottom: 5px;
   svg {
     width: 16px;
@@ -39,7 +42,6 @@ export const DeleteButton = styled.button`
   background-color: transparent;
   color: tomato;
   border: none;
-  float: right;
   margin-bottom: 5px;
   svg {
     width: 16px;
@@ -53,6 +55,10 @@ export const CompleteEditButton = styled.button`
   border: none;
   color: white;
   border-radius: 8px;
+  &:hover,
+  &:active {
+    opacity: 0.9;
+  }
 `;
 export const EditPhotoBox = styled.div`
   cursor: pointer;
