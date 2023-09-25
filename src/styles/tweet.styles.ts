@@ -15,6 +15,17 @@ export const Payload = styled.p`
   margin: 10px 0;
   font-size: 18px;
 `;
+export const DeleteButton = styled.button`
+  cursor: pointer;
+  background-color: transparent;
+  color: tomato;
+  border: none;
+  float: right;
+  margin-bottom: 5px;
+  svg {
+    width: 16px;
+  }
+`;
 export const Photo = styled.img`
   width: 100px;
   height: 100px;
