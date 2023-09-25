@@ -1,8 +1,18 @@
 import styled from "styled-components";
-import { auth, storage } from "../firebase";
-import { ChangeEvent, useState } from "react";
+import { auth, database, storage } from "../firebase";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { ITweet } from "../components/timeline";
+import Tweet from "../components/tweet";
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,11 +41,48 @@ const AvatarInput = styled.input`
 `;
 const Name = styled.span`
   font-size: 22px;
+  margin-bottom: 18px;
+  svg {
+    cursor: pointer;
+    margin-left: 5px;
+    width: 15px;
+  }
+`;
+const NameWrapper = styled.div`
+  width: 200px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #bbb;
+  display: flex;
+  align-items: center;
+  svg {
+    cursor: pointer;
+    color: #bbb;
+    width: 25px;
+    height: 25px;
+  }
+`;
+const NameInput = styled.input`
+  width: 170px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 10px;
+  &:focus {
+    outline: none;
+  }
+`;
+const Tweets = styled.div`
+  width: 100%;
+  height: auto;
+  padding: 0 20px;
 `;
 
 export default function Profile() {
   const user = auth.currentUser;
+  const [edit, setEdit] = useState(false);
   const [avatar, setAvatar] = useState(user?.photoURL);
+  const [tweets, setTweets] = useState<ITweet[]>([]);
+  const [name, setName] = useState(user?.displayName?.toString());
 
   const onChangeAvatar = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -57,6 +104,46 @@ export default function Profile() {
       console.log(e);
     }
   };
+  const onClickName = () => {
+    setEdit(true);
+  };
+  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+  const onClickSaveName = async () => {
+    try {
+      if (!user || name === user.displayName) return;
+      await updateProfile(user, { displayName: name });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setEdit(false);
+    }
+  };
+  const fetchTweets = async () => {
+    const tweetQuery = query(
+      collection(database, "tweets"),
+      where("userId", "==", user?.uid),
+      orderBy("createdAt", "desc"),
+      limit(25)
+    );
+    const snapshot = await getDocs(tweetQuery);
+    const tweets = snapshot.docs.map((doc) => {
+      const { id, tweet, createdAt, userId, username, photo } = doc.data();
+      return {
+        id,
+        tweet,
+        createdAt,
+        userId,
+        username,
+        photo,
+      };
+    });
+    setTweets(tweets);
+  };
+  useEffect(() => {
+    fetchTweets();
+  }, []);
   return (
     <Wrapper>
       <AvatarUpload htmlFor="avatar">
@@ -64,7 +151,7 @@ export default function Profile() {
           <AvatarImg src={avatar} />
         ) : (
           <svg
-            fill="#bbb"
+            fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -83,7 +170,42 @@ export default function Profile() {
         type="file"
         accept="image/*"
       />
-      <Name>{user?.displayName ?? "Anonymous"}</Name>
+      {edit ? (
+        <NameWrapper>
+          <NameInput type="text" value={name} onChange={onChangeName} />
+          <svg
+            onClick={onClickSaveName}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              clipRule="evenodd"
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM6.75 9.25a.75.75 0 000 1.5h4.59l-2.1 1.95a.75.75 0 001.02 1.1l3.5-3.25a.75.75 0 000-1.1l-3.5-3.25a.75.75 0 10-1.02 1.1l2.1 1.95H6.75z"
+            />
+          </svg>
+        </NameWrapper>
+      ) : (
+        <Name>
+          {user?.displayName ?? "Anonymous"}
+          <svg
+            onClick={onClickName}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+          </svg>
+        </Name>
+      )}
+      <Tweets>
+        {tweets.map((tweet) => (
+          <Tweet key={tweet.id} {...tweet} />
+        ))}
+      </Tweets>
     </Wrapper>
   );
 }
