@@ -4,6 +4,7 @@ export const customErrors = (code: string) => {
     "auth/email-already-in-use",
     "auth/internal-error",
     "auth/invalid-email",
+    "auth/weak-password",
   ];
   const codeIndex = errorCodes.indexOf(code);
 
@@ -21,6 +22,9 @@ export const customErrors = (code: string) => {
       break;
     case 3:
       message = "존재하지 않는 이메일이에요. 회원가입을 먼저 해주세요 😊";
+      break;
+    case 4:
+      message = "비밀번호는 최소 6자리 이상이어야해요 😉";
       break;
     default:
       message = "오류가 발생했어요. 잠시 후 다시 시도해주세요 🙏🏻";

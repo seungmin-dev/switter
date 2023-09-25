@@ -1,4 +1,4 @@
-import * as S from "../styles/tweet.styles";
+import * as S from "../styles/tweetForm.styles";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { auth, database, storage } from "../firebase";
