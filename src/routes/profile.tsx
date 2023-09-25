@@ -129,9 +129,9 @@ export default function Profile() {
     );
     const snapshot = await getDocs(tweetQuery);
     const tweets = snapshot.docs.map((doc) => {
-      const { id, tweet, createdAt, userId, username, photo } = doc.data();
+      const { tweet, createdAt, userId, username, photo } = doc.data();
       return {
-        id,
+        id: doc.id,
         tweet,
         createdAt,
         userId,

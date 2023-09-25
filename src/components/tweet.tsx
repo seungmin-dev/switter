@@ -59,6 +59,7 @@ export default function Tweet({ tweet, username, photo, userId, id }: ITweet) {
           photo: url,
         });
       }
+      tweet = editTweet;
       setEdit(false);
       setEditPhoto(null);
     } catch (e) {
@@ -127,7 +128,7 @@ export default function Tweet({ tweet, username, photo, userId, id }: ITweet) {
       {!edit ? (
         <S.Payload>{tweet}</S.Payload>
       ) : (
-        <S.Textarea onChange={onChangeText}>{editTweet}</S.Textarea>
+        <S.Textarea onChange={onChangeText} value={editTweet} />
       )}
       {!photo ? null : edit ? (
         <S.EditPhotoBox>
