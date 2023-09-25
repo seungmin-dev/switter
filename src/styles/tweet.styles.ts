@@ -27,26 +27,7 @@ export const BtnWrapper = styled.div`
   flex-direction: row-reverse;
   gap: 5px;
 `;
-export const EditButton = styled.button`
-  cursor: pointer;
-  background-color: transparent;
-  color: tomato;
-  border: none;
-  margin-bottom: 5px;
-  svg {
-    width: 16px;
-  }
-`;
-export const DeleteButton = styled.button`
-  cursor: pointer;
-  background-color: transparent;
-  color: tomato;
-  border: none;
-  margin-bottom: 5px;
-  svg {
-    width: 16px;
-  }
-`;
+
 export const CompleteEditButton = styled.button`
   cursor: pointer;
   width: 100px;
@@ -59,27 +40,6 @@ export const CompleteEditButton = styled.button`
   &:active {
     opacity: 0.9;
   }
-`;
-export const EditPhotoBox = styled.div`
-  cursor: pointer;
-  width: 100px;
-  height: 100px;
-  border-radius: 15px;
-  position: relative;
-`;
-export const EditPhotoButton = styled.label`
-  cursor: pointer;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-export const AttachEditFileInput = styled.input`
-  display: none;
 `;
 export const Photo = styled.img`
   width: 100px;

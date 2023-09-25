@@ -189,7 +189,7 @@ export default function Profile() {
         </NameWrapper>
       ) : (
         <Name>
-          {user?.displayName ?? "Anonymous"}
+          {user?.displayName ?? "익명"}
           <svg
             onClick={onClickName}
             fill="currentColor"
